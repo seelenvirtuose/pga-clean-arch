@@ -11,8 +11,8 @@
 	<groupId>net.mwgr.pga</groupId>
 	<artifactId>architecture</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>architecture</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Architecture</name>
+	<description>Demo project for demonstrating clean architecture</description>
 	<url/>
 	<licenses>
 		<license/>
