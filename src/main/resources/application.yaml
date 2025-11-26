@@ -1,6 +1,8 @@
 spring:
   application:
-    name: architecture
+    name: PGA Clean Architecture
+  jpa:
+    open-in-view: false
   h2:
     console:
       enabled: true
