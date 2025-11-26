@@ -1,4 +1,4 @@
-package net.mwgr.pga.arch.business.usecases;
+package net.mwgr.pga.arch.business.exceptions;
 
 import java.util.NoSuchElementException;
 

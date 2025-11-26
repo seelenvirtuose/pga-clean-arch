@@ -1,64 +1,59 @@
-package net.mwgr.pga.arch.business;
+package net.mwgr.pga.arch.business.services;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import net.mwgr.pga.arch.dataaccess.BookEntity;
-import net.mwgr.pga.arch.dataaccess.BookRepository;
-import net.mwgr.pga.arch.business.model.BookStatus;
-import net.mwgr.pga.arch.presentation.BookResource;
+import net.mwgr.pga.arch.business.exceptions.BookNotFoundException;
+import net.mwgr.pga.arch.business.model.Book;
+import net.mwgr.pga.arch.business.ports.DeleteBookPort;
+import net.mwgr.pga.arch.business.ports.LoadBooksPort;
+import net.mwgr.pga.arch.business.ports.PersistBookPort;
+import net.mwgr.pga.arch.business.usecases.mgmt.ListBooksUseCase;
+import net.mwgr.pga.arch.business.usecases.mgmt.RegisterBookUseCase;
+import net.mwgr.pga.arch.business.usecases.mgmt.RemoveBookUseCase;
+import net.mwgr.pga.arch.business.usecases.mgmt.UpdateBookUseCase;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @Service
 @RequiredArgsConstructor
-public class BookService {
+public class BookMgmtService
+    implements ListBooksUseCase, RegisterBookUseCase, UpdateBookUseCase, RemoveBookUseCase {
 
-  private final BookRepository bookRepository;
+  private final LoadBooksPort loadBooksPort;
+  private final PersistBookPort persistBookPort;
+  private final DeleteBookPort deleteBookPort;
 
-  public List<BookEntity> listAllBooks() {
-    return bookRepository.findAll();
+  @Override
+  public List<Book> listAllBooks() {
+    return loadBooksPort.loadAllBooks();
   }
 
-  public long create(BookResource resource) {
-    return bookRepository.save(entityFromResource(resource)).getId();
+  @Override
+  public long registerBook(Book book) {
+    book.setId(null);
+    book.setStatus(Book.Status.AVAILABLE);
+    return persistBookPort.persistBook(book).getId();
   }
 
-  public BookEntity read(long id) {
-    return bookRepository.findById(id).orElseThrow();
+  @Override
+  public Book listSingleBook(long id) throws BookNotFoundException {
+    return lookupBookOrThrow(id);
   }
 
-  public void update(long id, BookResource resource) {
-    var entity = read(id);
-    entity.setIsbn(resource.getIsbn());
-    entity.setTitle(resource.getTitle());
-    entity.setAuthor(resource.getAuthor());
+  @Override
+  public void updateBook(long id, Book book) throws BookNotFoundException {
+    var lookup = lookupBookOrThrow(id);
+    book.setId(id);
+    book.setStatus(lookup.getStatus());
+    persistBookPort.persistBook(book);
   }
 
-  public void delete(long id) {
-    bookRepository.deleteById(id);
+  @Override
+  public void removeBook(long id) throws BookNotFoundException {
+    lookupBookOrThrow(id);
+    deleteBookPort.deleteBook(id);
   }
 
-  public void borrowBook(long id) {
-    var entity = read(id);
-    if (entity.getStatus() != BookStatus.AVAILABLE)
-      throw new IllegalStateException("Book %d is not available".formatted(id));
-    entity.setStatus(BookStatus.BORROWED);
-  }
-
-  public void returnBook(long id) {
-    var entity = read(id);
-    if (entity.getStatus() != BookStatus.BORROWED)
-      throw new IllegalStateException("Book %d is not borrowed".formatted(id));
-    entity.setStatus(BookStatus.AVAILABLE);
-  }
-
-  private static BookEntity entityFromResource(BookResource resource) {
-    return BookEntity.builder()
-        .isbn(resource.getIsbn())
-        .title(resource.getTitle())
-        .author(resource.getAuthor())
-        .status(BookStatus.AVAILABLE)
-        .build();
+  private Book lookupBookOrThrow(long id) throws BookNotFoundException {
+    return loadBooksPort.loadSingleBook(id).orElseThrow(BookNotFoundException::new);
   }
 }

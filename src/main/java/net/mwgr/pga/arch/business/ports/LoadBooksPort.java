@@ -2,15 +2,10 @@ package net.mwgr.pga.arch.business.ports;
 
 import java.util.List;
 import java.util.Optional;
-import lombok.Builder;
-import net.mwgr.pga.arch.business.model.BookStatus;
+import net.mwgr.pga.arch.business.model.Book;
 
-public interface LoadBookPort {
+public interface LoadBooksPort {
+  List<Book> loadAllBooks();
 
-  List<LoadBookData> loadAllBooks();
-
-  Optional<LoadBookData> loadSingleBook(long id);
-
-  @Builder
-  record LoadBookData(Long id, String isbn, String title, String author, BookStatus status) {}
+  Optional<Book> loadSingleBook(long id);
 }

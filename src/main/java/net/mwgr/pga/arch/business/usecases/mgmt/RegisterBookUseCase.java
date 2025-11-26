@@ -1,10 +1,7 @@
-package net.mwgr.pga.arch.business.usecases;
+package net.mwgr.pga.arch.business.usecases.mgmt;
 
-import lombok.Builder;
+import net.mwgr.pga.arch.business.model.Book;
 
 public interface RegisterBookUseCase {
-  long registerBook(RegisterBookCommand book);
-
-  @Builder
-  record RegisterBookCommand(String isbn, String title, String author) {}
+  long registerBook(Book book);
 }

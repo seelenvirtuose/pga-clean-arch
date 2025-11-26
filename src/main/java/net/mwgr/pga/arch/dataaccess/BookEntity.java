@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.mwgr.pga.arch.business.model.Book;
 
 @Entity
 @Data
@@ -28,5 +29,19 @@ public class BookEntity {
 
   @Nonnull
   @Enumerated(EnumType.STRING)
-  private BookStatus status;
+  private Book.Status status;
+
+  public static BookEntity fromBook(Book book) {
+    return BookEntity.builder()
+        .id(book.getId())
+        .isbn(book.getIsbn())
+        .title(book.getTitle())
+        .author(book.getAuthor())
+        .status(book.getStatus())
+        .build();
+  }
+
+  public Book toBook() {
+    return Book.builder().id(id).isbn(isbn).title(title).author(author).status(status).build();
+  }
 }
