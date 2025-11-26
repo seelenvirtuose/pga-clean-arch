@@ -4,7 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.mwgr.pga.arch.dataaccess.BookEntity;
 import net.mwgr.pga.arch.dataaccess.BookRepository;
-import net.mwgr.pga.arch.dataaccess.BookStatus;
+import net.mwgr.pga.arch.business.model.BookStatus;
 import net.mwgr.pga.arch.presentation.BookResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
