@@ -1,13 +1,11 @@
-package net.mwgr.pga.architecture;
+package net.mwgr.pga.arch;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class ArchitectureApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(ArchitectureApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(ArchitectureApplication.class, args);
+  }
 }

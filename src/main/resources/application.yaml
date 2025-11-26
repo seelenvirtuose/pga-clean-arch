@@ -1,3 +1,6 @@
 spring:
   application:
     name: architecture
+  h2:
+    console:
+      enabled: true
